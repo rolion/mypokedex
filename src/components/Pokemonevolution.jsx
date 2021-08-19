@@ -1,9 +1,6 @@
 import React,  { useState, useEffect } from 'react';
-import axios from 'axios';
 import '../assets/styles/Pokemonevolution.css';
-import Pokemonresume from "./Pokemonresume";
 import Pokemoncard from "./Pokemoncard";
-import {forEach} from "react-bootstrap/ElementChildren";
 const Pokemonevolution = ({evolutions}) => {
 
     console.log('evolution component', evolutions);
@@ -25,7 +22,7 @@ const Pokemonevolution = ({evolutions}) => {
 
         }
     }
-    return <div className='row container-evolution d-flex justify-content-center'>
+    return <div className='row container-evolution d-flex justify-content-center pokemon-info'>
         <div className='d-flex flex-row'>
             <div className='d-flex flex-column'>
                 <div className=''>

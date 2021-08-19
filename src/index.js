@@ -8,7 +8,10 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Home />
+      <div className='container-fluid'>
+          <Home />
+      </div>
+
   </React.StrictMode>,
   document.getElementById('root')
 );

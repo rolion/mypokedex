@@ -3,7 +3,7 @@ import axios from 'axios';
 import Pokemondata from "./Pokemondata";
 import Pokemonmovesc from "./Pokemonmoves";
 import PokemonEvolution from './Pokemonevolution';
-import {forEach} from "react-bootstrap/ElementChildren";
+import '../assets/styles/search.css'
 
 const Search = (props) => {
     const [pokemonName, setPokemonName] = useState('');
@@ -163,13 +163,12 @@ const Search = (props) => {
                    description:description.flavor_text})
            }
         }
-        console.log(movesData)
         return movesData;
     }
 
         return <>
-                <div className='row d-flex justify-content-center'>
-                    <div className='col-5'>
+                <div className='row d-flex justify-content-center search '>
+                    <div className='col-md-5 col-12'>
                         <div className="input-group mb-3">
                             <input type="text" className="form-control" placeholder="name" onChange={event => setPokemonName(event.target.value)}/>
                             <div className="input-group-append">
@@ -179,7 +178,7 @@ const Search = (props) => {
                     </div>
                 </div>
 
-                <div className='row d-flex justify-content-center'>
+                <div className='row d-flex justify-content-center pokemon-info'>
                     {
                         pokemonId!=null &&
                         pokemonName!=null &&

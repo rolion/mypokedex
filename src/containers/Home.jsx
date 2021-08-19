@@ -1,10 +1,13 @@
 import React from 'react';
 import Welcome from "../components/Welcome";
 import Search from "../components/Search";
-const Home = (porps)=>{
+const Home = (props)=>{
     return (<>
         <Welcome name="Oscar" />
-        <Search/>
+        <div className='container'>
+            <Search/>
+        </div>
+
     </>)
 }
 

@@ -86,7 +86,7 @@ const Search = (props) => {
         try {
             setPokemonMoves(null);
             setPokemonEvolution(null);
-            let resp = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+            let resp = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`);
             if (resp.status == 200) {
                 let data = resp.data;
                 await getPokemonSpecie(data.species.url);

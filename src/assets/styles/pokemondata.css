@@ -1,0 +1,6 @@
+.pokemon-data .title {
+    font-weight: bold;
+}
+.pokemon-name > h3 {
+    text-transform: capitalize;
+}

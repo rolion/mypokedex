@@ -54,6 +54,7 @@ const Pokemonstat = ({stats}) => {
     };
     return (
         <>
+            <div className='row d-flex justify-content-center'><h3>Base Stat</h3></div>
             <Bar data={data} options={options} />
         </>
     );

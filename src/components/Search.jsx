@@ -51,26 +51,6 @@ const Search = (props) => {
             }
         }
     }
-    async function formatPokemonEvolution(url){
-        if(url){
-            try{
-                let resp = await axios.get(url);
-                let chain = resp.data.chain;
-                let evolvesTo = chain.evolves_to;
-                let imageUrl = await getPokemonImage(chain.species.name);
-                chain.species.img =imageUrl;
-                for(let i = 0; i<evolvesTo.length; i++){
-                    let elem = evolvesTo[i];
-                    elem.species.img =  await getPokemonImage(elem.species.name);
-                    elem.evolves_to = await _getEvolutionPic(elem.evolves_to);
-                }
-                console.log('cadena evolucion', chain);
-                setPokemonEvolution(chain);
-            }catch (e) {
-                console.log(`error ->`, e);
-            }
-        }
-    }
     async function getPokemonImage(name){
         try{
             let resp = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`);
@@ -82,26 +62,31 @@ const Search = (props) => {
             console.log(e);
         }
     }
-    async function handleSearch(){
+    async function handleSearch(name){
         try {
-            setPokemonMoves(null);
-            setPokemonEvolution(null);
-            let resp = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`);
-            if (resp.status == 200) {
-                let data = resp.data;
-                await getPokemonSpecie(data.species.url);
-                await getStrengthWeakness(data.types);
-                setPokemonId(data.id);
-                setPokemonWeight(data.weight/10);
-                setPokemonHeight(data.height*0.1);
-                setPokemonId(data.id);
-                let frontDefault = data.sprites.other['official-artwork'].front_default;
-                let pokeImage = frontDefault?frontDefault:data.sprites.front_default;
-                setPokemonImgUrl(pokeImage);
-                setPokemonSpecie(data.species)
-                setPokemonStats(data.stats);
+            if(name){
+                setPokemonMoves(null);
+                setPokemonEvolution(null);
+                let resp = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`);
+                if (resp.status == 200) {
+                    let data = resp.data;
+                    await getPokemonSpecie(data.species.url);
+                    await getStrengthWeakness(data.types);
+                    setPokemonId(data.id);
+                    setPokemonWeight(data.weight/10);
+                    setPokemonHeight(data.height*0.1);
+                    setPokemonId(data.id);
+                    let frontDefault = data.sprites.other['official-artwork'].front_default;
+                    let pokeImage = frontDefault?frontDefault:data.sprites.front_default;
+                    setPokemonImgUrl(pokeImage);
+                    setPokemonSpecie(data.species)
+                    setPokemonStats(data.stats);
+                    console.log(data)
+                }else{
+                    console.log('error', resp.statusText);
+                }
             }else{
-                console.log('error', resp.statusText);
+                console.log('no pokemone Name')
             }
         }catch (e) {
             console.log(e);
@@ -145,34 +130,22 @@ const Search = (props) => {
 
         }
     }
-    async function getMoves(moves){
-        let movesData = [];
-        if(moves && moves.length>0){
-           for(let i=0; i<moves.length; i++){
-               let move= moves[i].move;
-
-               let resp = await axios.get(move.url);
-               let data = await resp.data;
-               console.log(data);
-               let description = data.flavor_text_entries.find(el => el.language.name=='en');
-               movesData.push({name:move.name,
-                   pp:data.pp,
-                   power:data.power,
-                   type: data.type,
-                   category: data.meta.category.name,
-                   description:description.flavor_text})
-           }
-        }
-        return movesData;
+    function _handlekeywordEvent(pokemonName){
+        setPokemonName(pokemonName)
+        console.log('pokemonName ', pokemonName)
+        handleSearch(pokemonName)
     }
-
         return <>
                 <div className='row d-flex justify-content-center search '>
                     <div className='col-md-5 col-12'>
                         <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="name" onChange={event => setPokemonName(event.target.value)}/>
+                            <input type="text"
+                                   className="form-control"
+                                   placeholder="name"
+                                   onChange={event => setPokemonName(event.target.value)}
+                                   onKeyDown={e => e.key === 'Enter' && _handlekeywordEvent(e.target.value)}/>
                             <div className="input-group-append">
-                                <button className="btn btn-primary" type="button"  onClick={handleSearch} >Search</button>
+                                <button className="btn btn-primary" type="button"  onClick={e=>handleSearch(pokemonName)} >Search</button>
                             </div>
                         </div>
                     </div>

@@ -23,6 +23,7 @@ const Pokemonevolution = ({evolutions}) => {
         }
     }
     return <div className='row container-evolution d-flex justify-content-center pokemon-info'>
+        <h2>Evolution</h2>
         <div className='d-flex flex-row'>
             <div className='d-flex flex-column'>
                 <div className=''>

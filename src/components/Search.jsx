@@ -70,8 +70,10 @@ const Search = (props) => {
                 let resp = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`);
                 if (resp.status == 200) {
                     let data = resp.data;
+                    console.log('data', data)
                     await getPokemonSpecie(data.species.url);
                     await getStrengthWeakness(data.types);
+                    setPokemonName(data.species.name)
                     setPokemonId(data.id);
                     setPokemonWeight(data.weight/10);
                     setPokemonHeight(data.height*0.1);
@@ -81,7 +83,12 @@ const Search = (props) => {
                     setPokemonImgUrl(pokeImage);
                     setPokemonSpecie(data.species)
                     setPokemonStats(data.stats);
-                    console.log(data)
+                    console.log('pokemonId', pokemonId);
+                    console.log('pokemonName', pokemonName);
+                    console.log('pokemonType', pokemonType);
+                    console.log('pokemonStats', pokemonStats);
+                    console.log('pokemonDescription', pokemonDescription);
+                    console.log('pokemonCategory', pokemonCategory);
                 }else{
                     console.log('error', resp.statusText);
                 }
@@ -96,9 +103,17 @@ const Search = (props) => {
         if(url){
             let resp = await axios.get(url);
             let data = await resp.data;
-            getPokemonEvolution(data.evolution_chain.url);
-            let descripcionElement =data.flavor_text_entries[9];
-            setPokemonDescription(descripcionElement?descripcionElement.flavor_text:'');
+            await getPokemonEvolution(data.evolution_chain.url);
+            let descripcionElement = '';
+            let flavorTextEntriesFiltered =data.flavor_text_entries.filter(e => e.language.name == 'en')
+            if(flavorTextEntriesFiltered){
+                descripcionElement=  flavorTextEntriesFiltered[0]
+            }else{
+                descripcionElement =data.flavor_text_entries[0];
+            }
+            console.log('descripcionElement', descripcionElement)
+            // let descripcionElement =data.flavor_text_entries[9];
+            setPokemonDescription(descripcionElement?descripcionElement.flavor_text.replace("\f",'') :'');
             let categorie = data.genera.find(el => el.language.name == 'en');
             setPokemonCategory(categorie!=null?categorie.genus:'');
         }
@@ -131,13 +146,13 @@ const Search = (props) => {
         }
     }
     function _handlekeywordEvent(pokemonName){
-        setPokemonName(pokemonName)
+
         console.log('pokemonName ', pokemonName)
         handleSearch(pokemonName)
     }
         return <>
                 <div className='row d-flex justify-content-center search '>
-                    <div className='col-md-5 col-12'>
+                    <div className='col-lg-10 col-md-8 col-12'>
                         <div className="input-group mb-3">
                             <input type="text"
                                    className="form-control"
@@ -171,14 +186,11 @@ const Search = (props) => {
                         >
                         </Pokemondata>
                     )}
-
-
-
                 </div>
             { pokemonMoves!=null && ( <Pokemonmovesc moves={pokemonMoves}></Pokemonmovesc>  )}
 
             { pokemonEvolution !=null && <PokemonEvolution evolutions={pokemonEvolution}></PokemonEvolution>}
-        </>;
+        </>
 };
 
 export default Search;

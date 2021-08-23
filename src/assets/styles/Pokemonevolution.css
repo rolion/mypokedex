@@ -1,5 +1,11 @@
 .container-evolution img {
-    max-height: 50%;
+
     border-width: thick;
     border-color: black;
+    max-width: 150px;
+    width: 100%;
+}
+
+.container-evolution h4 {
+    text-transform: capitalize;
 }

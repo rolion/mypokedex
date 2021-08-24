@@ -1,9 +1,9 @@
 import React from 'react';
-import Welcome from "../components/Welcome";
+import Banner from "../components/Banner";
 import Search from "../components/Search";
 const Home = (props)=>{
     return (<>
-        <Welcome name="Oscar" />
+        <Banner name="Oscar" />
         <div className='container'>
             <Search/>
         </div>

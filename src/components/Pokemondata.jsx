@@ -33,13 +33,19 @@ const Pokemondata = ({name, id, type, category,description, url, stats, height, 
                                 <div className='col-4'>{category}</div>
                             </div>
                             <div className='row'>
-                                <div className='col-4 title'>Type</div>
-                                <div className='col-4 title'>Weakness</div>
+                                <div className='col-12 title'>Type</div>
+
                             </div>
                             <div className='row'>
                                 {type.map(item=>{
                                     return <div className='col-4'>{item.name}</div>
                                 })}
+
+                            </div>
+                            <div className='row'>
+                                <div className='col-12 title'>Weakness</div>
+                            </div>
+                            <div className="row">
                                 {weakness.map(item=>{
                                     return <div className='col-4'>{item}</div>
                                 })}

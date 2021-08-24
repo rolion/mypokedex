@@ -113,7 +113,7 @@ const Search = (props) => {
             }
             console.log('descripcionElement', descripcionElement)
             // let descripcionElement =data.flavor_text_entries[9];
-            setPokemonDescription(descripcionElement?descripcionElement.flavor_text.replace("\f",'') :'');
+            setPokemonDescription(descripcionElement?descripcionElement.flavor_text.replace("\f",' ') :'');
             let categorie = data.genera.find(el => el.language.name == 'en');
             setPokemonCategory(categorie!=null?categorie.genus:'');
         }

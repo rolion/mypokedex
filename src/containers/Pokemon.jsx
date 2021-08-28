@@ -1,14 +1,12 @@
-import React from 'react';
 import Banner from "../components/Banner";
 import SearchBar from "../components/SearchBar";
-const Home = (props)=>{
+import React from "react";
+
+const Pokemon = (props)=>{
     return (<>
         <Banner name="Oscar" />
-        <div className='container'>
-            <SearchBar/>
-        </div>
 
     </>)
 }
 
-export default Home;
+export default Pokemon;

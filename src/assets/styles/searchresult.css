@@ -1,0 +1,14 @@
+.search-result{
+    background-color: white;
+    padding: 1em;
+    border-radius: 30px;
+    margin-bottom: 1em;
+}
+.search-result img {
+    background-color: lightgray;
+
+}
+
+.search-result .pokemon-card{
+    margin-bottom: 1.5em;
+}

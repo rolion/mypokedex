@@ -7,24 +7,33 @@ const basicUrl = 'https://pokeapi.co/api/v2/';
 const getPokemonList = (limit = 60, offset = 0 ) => axios.get(`${basicUrl}pokemon?limit=${limit}&offset=${offset}`);
 const getPokemonIdFromUrl = url => url.split('/')[6]
 
-const searchPokemonByName = name => getPokemonList(1118, 0).then(data =>{
-    let result = data.data.results;
-    let filteredResult = result.filter(pokemon => pokemon.name.includes(name) )
-    let mappedResult = filteredResult.map(pokemon =>( {name:pokemon.name, id : getPokemonIdFromUrl(pokemon.url)}))
-    return mappedResult
-}).catch(error => console.log(error))
+const searchPokemonByName =  async name => {
+    let pokemonList = await getPokemonList(1118, 0).then(resp => resp.data.results);
+    let filteredPokemonList = pokemonList.filter(pokemon => (pokemon.name.includes(name)) );
+    let pokemonListMapped = filteredPokemonList.map(pokemon =>( {name:pokemon.name, id : getPokemonIdFromUrl(pokemon.url)}));
+    let searchResult = [];
+    for(let position = 0; position < pokemonListMapped.length; position++){
+        let pokemon = pokemonListMapped[position];
+        let baseInfo = await getPokemoBaseInfo(pokemon.id);
+        if(baseInfo.is_default){
+            searchResult.push(baseInfo);
+        }
+    }
+    return searchResult;
+}
 
 const getPokemoBaseInfo = async id => {
     let result = await getPokemonById(id);
     return {
-        name: result.species.name,
+        name: result.name,
         id: result.id,
         weight: result.weight/10,
         heigth: result.height*0.1,
         specieUrl: result.species.url,
         types: result.types,
         images: result.sprites,
-        stats: result.stats
+        stats: result.stats,
+        is_default: result.is_default
     }
 }
 const getPokemonSpecie =  pokemonBaseInfo => axios.get(pokemonBaseInfo.specieUrl).then(resp =>{
@@ -110,7 +119,7 @@ const getPokemonInfo = async id =>{
     let pokemonEvolutionChain = await  getPokemonEvolution(pokemonSpecie);
     return {...basePokemonInfo, ...pokemonSpecie, ...pokemonStrengthWeakness, evolutionChain:{...pokemonEvolutionChain}}
 }
-module.exports ={
+export {
     getPokemonList,
     searchPokemonByName,
     getPokemonInfo

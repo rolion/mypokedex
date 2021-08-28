@@ -1,7 +1,8 @@
-import React from 'react';
 import Banner from "../components/Banner";
 import SearchBar from "../components/SearchBar";
-const Home = (props)=>{
+import React from "react";
+
+const Search = (props)=>{
     return (<>
         <Banner name="Oscar" />
         <div className='container'>
@@ -11,4 +12,4 @@ const Home = (props)=>{
     </>)
 }
 
-export default Home;
+export default Search;

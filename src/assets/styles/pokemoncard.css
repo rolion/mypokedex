@@ -1,0 +1,7 @@
+.pokemon-name{
+    text-transform: capitalize;
+}
+
+.pokemon-card p {
+    font-weight: bold;
+}

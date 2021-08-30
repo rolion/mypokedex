@@ -1,0 +1,15 @@
+.pokemon-evolution-container {
+    padding-bottom: 1.5em;
+    margin-bottom: 1em;
+}
+.title{
+    margin-top: 1em;
+}
+
+.pokemon-container{
+    margin-top: 1em;
+    background-color: white;
+    border-radius: 30px;
+    padding-left: 5em;
+    padding-right: 5em;
+}

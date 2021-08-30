@@ -3,7 +3,7 @@ import Banner from "../components/Banner";
 import SearchBar from "../components/SearchBar";
 const Home = (props)=>{
     return (<>
-        <Banner name="Oscar" />
+
         <div className='container'>
             <SearchBar/>
         </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { getPokemonList, searchPokemonByName, getPokemonInfo} from '../assets/libs/http'
+import { getPokemonList, searchPokemonByName, getPokemonInfo } from '../assets/libs/http'
 jest.mock('axios');
 
 const fakePokemonList = [

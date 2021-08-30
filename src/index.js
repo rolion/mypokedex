@@ -4,13 +4,35 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import Home from "./containers/Home";
+import Pokemon from './containers/Pokemon';
 import reportWebVitals from './reportWebVitals';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
+import Banner from "./components/Banner";
 
 ReactDOM.render(
   <React.StrictMode>
-      <div className='container-fluid'>
-          <Home />
-      </div>
+    <Router>
+        <div className='container-fluid'>
+            <Banner name="Oscar" />
+            <Switch>
+                <Route path='/pokedex'>
+                    <Home />
+                </Route>
+                <Route path='/pokemon/:name'>
+                    <Pokemon />
+                </Route>
+                <Route path='/'>
+                    <Home />
+                </Route>
+            </Switch>
+
+        </div>
+    </Router>
 
   </React.StrictMode>,
   document.getElementById('root')

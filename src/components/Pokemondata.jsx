@@ -5,12 +5,13 @@ const Pokemondata = ({name, id, type, category,description, url, stats, height, 
     let weakness = type.reduce((weaknessAcc, currenType)=>{
         return [...weaknessAcc, ...currenType.weakness];
     },[]);
+//    let weakness = [];
     return <>
-        <div className='col-lg-10 col-md-8 col-12 pokemon-data'>
+        <div className='col-12 pokemon-data'>
             <div className='row d-flex justify-content-center'>
                 <div className='pokemon-name'><h3>{name} Nro {id}</h3></div>
             </div>
-            <div className='row d-flex'>
+            <div className='row d-flex justify-content-center'>
                 <div className='col-md-4 col-12'>
                     <div className='pokemon-image'>
                         <img className='img-thumbnail' src={url}/>

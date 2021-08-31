@@ -1,29 +1,31 @@
 import React,  { useState, useEffect } from 'react';
-import axios from 'axios';
-import Pokemondata from "./Pokemondata";
 
 import '../assets/styles/search.css'
-import   {getPokemonList, searchPokemonByName, getPokemonInfo} from  '../assets/libs/http';
+import   { searchPokemonByName} from  '../assets/libs/http';
 import SearchResult from "./SearchResult";
+import Spinner from "./Spinner";
 
 const SearchBar = (props) => {
      const [pokemonName, setPokemonName] = useState('');
 
     const [searchResult, setSearchResult] = useState(null);
 
+    const [ isSearching, setIsSearching] = useState(false);
 
-    useEffect(() => {
-    });
+
     const handleSearch = async (name) => {
         try {
             if(name){
+                setIsSearching(true);
                 let resp = await searchPokemonByName(name);
                 setSearchResult(resp);
+                setIsSearching(false);
             }else{
                 console.log('no pokemone Name')
             }
         }catch (e) {
             console.log(e);
+            setIsSearching(false);
         }
     }
     return <>
@@ -42,7 +44,8 @@ const SearchBar = (props) => {
                 </div>
             </div>
             <div className='col-12  search-result-container'>
-                {searchResult && (
+                {isSearching && (<Spinner></Spinner>)}
+                {isSearching==false && searchResult && (
                     <SearchResult searchResult={searchResult}></SearchResult>
                 )}
             </div>

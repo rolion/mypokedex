@@ -81,7 +81,14 @@ const getPokemonEvolution = async pokemoBaseInfo =>{
     let data = await axios.get(pokemoBaseInfo.evolutionChainUrl).then(resp => resp.data);
     let chain = data.chain;
     let evolvesTo = chain.evolves_to;
-    let imageUrl = await getPokemonImage(chain.species.name);
+    let imageUrl = '';
+    try{
+        imageUrl = await getPokemonImage(chain.species.name);
+    }catch (e) {
+        let url= chain.species.url.split('/')
+        imageUrl = await getPokemonImage(url[6]);
+    }
+
     chain.species.img =imageUrl;
     for(let i = 0; i<evolvesTo.length; i++){
         let elem = evolvesTo[i];
@@ -109,14 +116,22 @@ const getEvolutionPic = async evolves_to =>{
     }
     return evolves_to;
 }
-const getPokemonById = id => axios.get(`${basicUrl}pokemon/${id}`).then(resp => resp.data);
+const getPokemonById = id => axios.get(`${basicUrl}pokemon/${id}`).then(resp => {
+    console.log('getPokemonById', id);
+    return resp.data
+});
 const getPokemonByName = name => axios.get(`${basicUrl}pokemon/${name}`).then(resp => resp.data);
 
 const getPokemonInfo = async id =>{
+    //console.log('getPokemonInfo name', id);
     let basePokemonInfo = await getPokemoBaseInfo(id);
+    //console.log('basePokemonInfo', basePokemonInfo);
     let pokemonSpecie = await getPokemonSpecie(basePokemonInfo);
+    //console.log('pokemonSpecie', pokemonSpecie);
     let pokemonStrengthWeakness = await getStrengthWeakness(basePokemonInfo);
+    //console.log('pokemonStrengthWeakness', pokemonStrengthWeakness);
     let pokemonEvolutionChain = await  getPokemonEvolution(pokemonSpecie);
+    //console.log('pokemonEvolutionChain', pokemonEvolutionChain);
     return {...basePokemonInfo, ...pokemonSpecie, ...pokemonStrengthWeakness, evolutionChain:{...pokemonEvolutionChain}}
 }
 export {

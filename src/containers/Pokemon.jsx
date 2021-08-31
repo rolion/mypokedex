@@ -5,29 +5,37 @@ import   {getPokemonList, searchPokemonByName, getPokemonInfo} from  '../assets/
 import { useParams } from "react-router-dom";
 import Pokemondata from "../components/Pokemondata";
 import PokemonEvolution from "../components/Pokemonevolution";
+import Spinner from "../components/Spinner";
 
 const Pokemon = ( props ) => {
     let urlName = useParams().name;
-
+    console.log('url parameter',urlName)
     const [name, setName] = useState('');
     useEffect( () => {
             setName(urlName);
             document.title = `Pokedex | ${name}`;
-    },[urlName]);
-
+    });
+    const [isLoading, setIsLoading] = useState(true);
     const [pokemonInfo, setPokemonInfo] = useState(null);
     useEffect(async ()=>{
         try{
-            let info = await getPokemonInfo(urlName);
-            setPokemonInfo(info);
+            if(pokemonInfo == null || pokemonInfo.name !=urlName){
+                console.log('use effect urlname', urlName )
+                let info = await getPokemonInfo(urlName);
+                setPokemonInfo(info);
+            }
         }catch (e) {
             console.log(e);
         }
+        setIsLoading(false);
     }, [urlName]);
 
-    if (name === '' ){
-        return 'Loading';
-        //d-flex justify-content-center
+    if (isLoading == true ){
+        return <>
+            <div className='container'>
+                    <Spinner></Spinner>
+            </div>
+        </>;
     }else{
         return <div className='container pokemon-container'>
             <div className='row d-flex justify-content-center pokemon-info'>

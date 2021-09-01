@@ -9,7 +9,6 @@ import Spinner from "../components/Spinner";
 
 const Pokemon = ( props ) => {
     let urlName = useParams().name;
-    console.log('url parameter',urlName)
     const [name, setName] = useState('');
     useEffect( () => {
             setName(urlName);
@@ -46,7 +45,9 @@ const Pokemon = ( props ) => {
                     pokemonInfo.stats!=null &&
                     pokemonInfo.description!=null &&
                     pokemonInfo.typesInfo!=null && (
-                        <Pokemondata name={pokemonInfo.name}
+                        <Pokemondata
+                                     key = {pokemonInfo.id}
+                                     name={pokemonInfo.name}
                                      id={pokemonInfo.id}
                                      category = {pokemonInfo.categorie}
                                      description = {pokemonInfo.description}
@@ -65,7 +66,6 @@ const Pokemon = ( props ) => {
             </div>
         </div>
     }
-
 }
 
 export default Pokemon;

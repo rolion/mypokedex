@@ -39,7 +39,7 @@ const Pokemondata = ({name, id, type, category,description, url, stats, height, 
                             </div>
                             <div className='row'>
                                 {type.map(item=>{
-                                    return <div className='col-4'>{item.name}</div>
+                                    return <div key={item.name} className='col-4'>{item.name}</div>
                                 })}
 
                             </div>
@@ -48,7 +48,7 @@ const Pokemondata = ({name, id, type, category,description, url, stats, height, 
                             </div>
                             <div className="row">
                                 {weakness.map(item=>{
-                                    return <div className='col-4'>{item}</div>
+                                    return <div key={item} className='col-4'>{item}</div>
                                 })}
                             </div>
                         </div>

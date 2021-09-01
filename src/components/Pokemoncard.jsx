@@ -3,7 +3,7 @@ import '../assets/styles/pokemoncard.css'
 import {Link} from "react-router-dom";
 const Pokemoncard= ({name, img, id}) => {
 
-    return <div className='col-md-3 col-12 pokemon-card'>
+    return <div className='col-md-3 col-sm-6 col-12 pokemon-card'>
 
         <h4 className='text-center pokemon-name'>
             <Link to={{

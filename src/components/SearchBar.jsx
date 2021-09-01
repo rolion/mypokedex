@@ -6,22 +6,25 @@ import SearchResult from "./SearchResult";
 import Spinner from "./Spinner";
 
 const SearchBar = (props) => {
-     const [pokemonName, setPokemonName] = useState('');
 
-    const [searchResult, setSearchResult] = useState(null);
+    const [pokemonName, setPokemonName] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
 
     const [ isSearching, setIsSearching] = useState(false);
+
 
 
     const handleSearch = async (name) => {
         try {
             if(name){
                 setIsSearching(true);
-                let resp = await searchPokemonByName(name);
+                setSearchResult(null);
+                let resp = await searchPokemonByName(name.toLowerCase());
                 setSearchResult(resp);
+                //loadResult();
                 setIsSearching(false);
             }else{
-                console.log('no pokemone Name')
+                console.log('no pokemone Name');
             }
         }catch (e) {
             console.log(e);
@@ -45,7 +48,7 @@ const SearchBar = (props) => {
             </div>
             <div className='col-12  search-result-container'>
                 {isSearching && (<Spinner></Spinner>)}
-                {isSearching==false && searchResult && (
+                {isSearching==false && searchResult?.length > 0 && (
                     <SearchResult searchResult={searchResult}></SearchResult>
                 )}
             </div>

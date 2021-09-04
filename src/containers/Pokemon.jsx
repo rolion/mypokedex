@@ -2,12 +2,15 @@ import React, {useState, useEffect, useCallback} from 'react';
 import '../assets/styles/pokemon.css';
 import   {getPokemonList, searchPokemonByName, getPokemonInfo} from  '../assets/libs/http';
 
-import { useParams } from "react-router-dom";
+import { useParams, useHistory} from "react-router-dom";
 import Pokemondata from "../components/Pokemondata";
 import PokemonEvolution from "../components/Pokemonevolution";
 import Spinner from "../components/Spinner";
 
+
+
 const Pokemon = ( props ) => {
+    let history = useHistory();
     let urlName = useParams().name;
     const [name, setName] = useState('');
     useEffect( () => {
@@ -22,12 +25,17 @@ const Pokemon = ( props ) => {
                 console.log('use effect urlname', urlName )
                 let info = await getPokemonInfo(urlName);
                 setPokemonInfo(info);
+                window.scrollTo(0, 0)
             }
         }catch (e) {
             console.log(e);
         }
         setIsLoading(false);
     }, [urlName]);
+
+    const handleClick = (e) => {
+        history.push("/pokedex");
+    }
 
     if (isLoading == true ){
         return <>
@@ -63,6 +71,9 @@ const Pokemon = ( props ) => {
             </div>
             <div className='row d-flex justify-content-center pokemon-evolution-container'>
                 { pokemonInfo && pokemonInfo.evolutionChain !=null && <PokemonEvolution evolutions={pokemonInfo.evolutionChain}></PokemonEvolution>}
+            </div>
+            <div className="row d-flex justify-content-center pokemon-bottom">
+                <button className="btn btn-primary" onClick={handleClick}> go back to pokedex</button>
             </div>
         </div>
     }

@@ -12,7 +12,9 @@ const SearchBar = (props) => {
 
     const [ isSearching, setIsSearching] = useState(false);
 
-
+    useEffect( () => {
+        document.title = `Pokedex`;
+    }, []);
 
     const handleSearch = async (name) => {
         try {

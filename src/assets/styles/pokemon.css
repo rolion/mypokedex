@@ -12,4 +12,8 @@
     border-radius: 30px;
     padding-left: 2.5em;
     padding-right: 2.5em;
+    margin-bottom: 1.5em;
+}
+.pokemon-container .pokemon-bottom {
+    padding-bottom: 1em;
 }

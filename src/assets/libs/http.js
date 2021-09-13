@@ -137,5 +137,6 @@ const getPokemonInfo = async id =>{
 export {
     getPokemonList,
     searchPokemonByName,
-    getPokemonInfo
+    getPokemonInfo,
+    getPokemonIdFromUrl
 }

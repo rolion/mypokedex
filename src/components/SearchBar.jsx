@@ -1,14 +1,39 @@
 import React,  { useState, useEffect } from 'react';
 
 import '../assets/styles/search.css'
-import   { searchPokemonByName} from  '../assets/libs/http';
+import {getPokemonList, searchPokemonByName, getPokemonIdFromUrl} from '../assets/libs/http';
 import SearchResult from "./SearchResult";
 import Spinner from "./Spinner";
+import SelectSearch, {fuzzySearch} from "react-select-search";
+import 'react-select-search/style.css';
 
 const SearchBar = (props) => {
 
     const [pokemonName, setPokemonName] = useState('');
     const [searchResult, setSearchResult] = useState([]);
+    const [ rawPokemonList, setRawPokemonList] = useState([]);
+    useEffect(async () =>{
+        try {
+            let resp = await getPokemonList(1118,0);
+            let list = resp.data.results;
+            //setRawPokemonList(list.data);
+            console.log(list);
+            setRawPokemonList(list.map(pokemon =>( {name:pokemon.name, value : getPokemonIdFromUrl(pokemon.url)})));
+
+        }catch (e) {
+            console.log(e);
+        }
+    },[])
+    // const [pokemonList, setPokemonList] = useState([]);
+    // useEffect(()=>{
+    //     if(pokemonName == ''){
+    //         setPokemonList(rawPokemonList)
+    //     }else{
+    //         if(rawPokemonList){
+    //             setPokemonList(rawPokemonList.filter(pokemon => (pokemon.name.includes(pokemonName))))
+    //         }
+    //     }
+    // }, [pokemonName])
 
     const [ isSearching, setIsSearching] = useState(false);
 
@@ -33,6 +58,10 @@ const SearchBar = (props) => {
             setIsSearching(false);
         }
     }
+    // const filterList = name =>{
+    //     setPokemonName(name);
+    //
+    // }
     return <>
             <div className='row d-flex justify-content-center search '>
                 <div className='col-lg-10 col-md-8 col-12'>
@@ -47,11 +76,19 @@ const SearchBar = (props) => {
                         </div>
                     </div>
                 </div>
+                {/*<div className="row">*/}
+                {/*    <div className="col-12">*/}
+                {/*        <SelectSearch options={rawPokemonList}*/}
+                {/*                      search='true'*/}
+                {/*                      filterOptions={fuzzySearch}*/}
+                {/*                      placeholder="Pokemon name" />*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </div>
             <div className='col-12  search-result-container'>
                 {isSearching && (<Spinner></Spinner>)}
                 {isSearching==false && searchResult?.length > 0 && (
-                    <SearchResult searchResult={searchResult}></SearchResult>
+                    <SearchResult searchResult={searchResult} ></SearchResult>
                 )}
             </div>
     </>

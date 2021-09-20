@@ -1,67 +1,24 @@
 import React,  { useState, useEffect } from 'react';
 
-import '../assets/styles/search.css'
-import {getPokemonList, searchPokemonByName, getPokemonIdFromUrl} from '../assets/libs/http';
+import '../assets/styles/search.css';
+import {getPokemonList, filterPokemonList, addAxiosStarted, addAxiosSuccess, addAxiosFailure} from '../actions/index';
+import {getPokemonList as axiosGetPokemonList, searchPokemonByName, getPokemonIdFromUrl} from '../assets/libs/http';
 import SearchResult from "./SearchResult";
 import Spinner from "./Spinner";
-import SelectSearch, {fuzzySearch} from "react-select-search";
-import 'react-select-search/style.css';
+import { connect } from 'react-redux';
 
 const SearchBar = (props) => {
+    let {loading, error, pokemonList, filterPokemonList} = props ;
 
-    const [pokemonName, setPokemonName] = useState('');
-    const [searchResult, setSearchResult] = useState([]);
-    const [ rawPokemonList, setRawPokemonList] = useState([]);
-    useEffect(async () =>{
-        try {
-            let resp = await getPokemonList(1118,0);
-            let list = resp.data.results;
-            //setRawPokemonList(list.data);
-            console.log(list);
-            setRawPokemonList(list.map(pokemon =>( {name:pokemon.name, value : getPokemonIdFromUrl(pokemon.url)})));
-
-        }catch (e) {
-            console.log(e);
-        }
-    },[])
-    // const [pokemonList, setPokemonList] = useState([]);
-    // useEffect(()=>{
-    //     if(pokemonName == ''){
-    //         setPokemonList(rawPokemonList)
-    //     }else{
-    //         if(rawPokemonList){
-    //             setPokemonList(rawPokemonList.filter(pokemon => (pokemon.name.includes(pokemonName))))
-    //         }
-    //     }
-    // }, [pokemonName])
-
-    const [ isSearching, setIsSearching] = useState(false);
-
-    useEffect( () => {
-        document.title = `Pokedex`;
-    }, []);
-
-    const handleSearch = async (name) => {
-        try {
-            if(name){
-                setIsSearching(true);
-                setSearchResult(null);
-                let resp = await searchPokemonByName(name.toLowerCase());
-                setSearchResult(resp);
-                //loadResult();
-                setIsSearching(false);
-            }else{
-                console.log('no pokemone Name');
-            }
-        }catch (e) {
-            console.log(e);
-            setIsSearching(false);
-        }
+    if(pokemonList == undefined ){
+        props.getList();
+        console.log('list loaded');
     }
-    // const filterList = name =>{
-    //     setPokemonName(name);
-    //
-    // }
+    const [pokemonName, setPokemonName] = useState('');
+    const handleSearch = async () => {
+        //props.getList();
+        props.searchPokemon(pokemonName, pokemonList);
+    }
     return <>
             <div className='row d-flex justify-content-center search '>
                 <div className='col-lg-10 col-md-8 col-12'>
@@ -70,28 +27,55 @@ const SearchBar = (props) => {
                                className="form-control"
                                placeholder="name"
                                onChange={event => setPokemonName(event.target.value)}
-                               onKeyDown={e => e.key === 'Enter' && handleSearch(e.target.value)}/>
+                               onKeyDown={e => e.key === 'Enter' && handleSearch()}/>
                         <div className="input-group-append">
-                            <button className="btn btn-primary" type="button"  onClick={e=>handleSearch(pokemonName)} >Search</button>
+                            <button className="btn btn-primary" type="button"  onClick={e=>handleSearch('')} >Search</button>
                         </div>
                     </div>
                 </div>
-                {/*<div className="row">*/}
-                {/*    <div className="col-12">*/}
-                {/*        <SelectSearch options={rawPokemonList}*/}
-                {/*                      search='true'*/}
-                {/*                      filterOptions={fuzzySearch}*/}
-                {/*                      placeholder="Pokemon name" />*/}
-                {/*    </div>*/}
-                {/*</div>*/}
             </div>
             <div className='col-12  search-result-container'>
-                {isSearching && (<Spinner></Spinner>)}
-                {isSearching==false && searchResult?.length > 0 && (
-                    <SearchResult searchResult={searchResult} ></SearchResult>
+                {loading && (<Spinner></Spinner>)}
+                {loading==false && filterPokemonList?.length > 0 && (
+                    <SearchResult searchResult={filterPokemonList} ></SearchResult>
                 )}
             </div>
     </>
 }
 
-export default SearchBar;
+
+const getRawList = ()=>{
+    return function (dispatch){
+        return axiosGetPokemonList(1118, 0).then(
+            (resp)=> dispatch(getPokemonList(resp.data.results)),
+            (error)=>dispatch(console.log(error))
+        )
+    }
+}
+const searchPokemon = (name, pokemonList) =>{
+    return function (dispatch){
+        dispatch(addAxiosStarted(true));
+        return searchPokemonByName(name, pokemonList).then(
+            (resp) => {
+                console.log('searchResult', resp);
+                dispatch(filterPokemonList(resp))
+
+                return dispatch(addAxiosSuccess(true));
+            },
+            (error) => dispatch(console.log(error))
+        )
+
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+        getList : ()=> dispatch(getRawList()),
+        searchPokemon: (name, pokemonList)=>dispatch(searchPokemon(name, pokemonList))
+  }
+}
+const mapStateToProps = (state) =>{
+    return {
+        ...state
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar)

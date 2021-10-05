@@ -1,23 +1,42 @@
 import React,  { useState, useEffect } from 'react';
 
 import '../assets/styles/search.css';
-import {getPokemonList, filterPokemonList, addAxiosStarted, addAxiosSuccess, addAxiosFailure} from '../actions/index';
+import {getPokemonList, filterPokemonList, addAxiosStarted, addAxiosSuccess, cleanState} from '../actions/index';
 import {getPokemonList as axiosGetPokemonList, searchPokemonByName, getPokemonIdFromUrl} from '../assets/libs/http';
 import SearchResult from "./SearchResult";
 import Spinner from "./Spinner";
 import { connect } from 'react-redux';
+import {useHistory, useLocation} from "react-router-dom"
 
 const SearchBar = (props) => {
-    let {loading, error, pokemonList, filterPokemonList} = props ;
 
-    if(pokemonList == undefined ){
-        props.getList();
-        console.log('list loaded');
-    }
-    const [pokemonName, setPokemonName] = useState('');
+    let {loading, pokemonList, filterPokemonList} = props ;
+    console.log('props', props);
+    const q = useQuery();
+    const params = new URLSearchParams();
+    const history = useHistory();
+    const [query, setQuery] = useState("");
+    const [isReload, setReload] = useState(q.get('search')==null?true:false);
+    useEffect(()=>{
+        if(q.get('search')==null){
+            props.cleanSearch();
+            setQuery('');
+            console.log('search result cleaned')
+        }
+        if(pokemonList == undefined ){
+            props.getList();
+            console.log('list loaded');
+        }
+    },[q.get('search')==null?true:false]);
+    console.log('search value',q.get('search'))
     const handleSearch = async () => {
-        //props.getList();
-        props.searchPokemon(pokemonName, pokemonList);
+        if(query){
+            props.searchPokemon(query, pokemonList);
+            params.append("search", query);
+            history.push({search: params.toString()});
+            console.log('param added',params.get('search'));
+        }
+
     }
     return <>
             <div className='row d-flex justify-content-center search '>
@@ -26,10 +45,11 @@ const SearchBar = (props) => {
                         <input type="text"
                                className="form-control"
                                placeholder="name"
-                               onChange={event => setPokemonName(event.target.value)}
+                               value={query}
+                               onChange={event => setQuery(event.target.value)}
                                onKeyDown={e => e.key === 'Enter' && handleSearch()}/>
                         <div className="input-group-append">
-                            <button className="btn btn-primary" type="button"  onClick={e=>handleSearch('')} >Search</button>
+                            <button className="btn btn-primary" type="button"  onClick={e=>handleSearch()} >Search</button>
                         </div>
                     </div>
                 </div>
@@ -43,7 +63,9 @@ const SearchBar = (props) => {
     </>
 }
 
-
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 const getRawList = ()=>{
     return function (dispatch){
         return axiosGetPokemonList(1118, 0).then(
@@ -70,10 +92,12 @@ const searchPokemon = (name, pokemonList) =>{
 const mapDispatchToProps = (dispatch) => {
   return {
         getList : ()=> dispatch(getRawList()),
-        searchPokemon: (name, pokemonList)=>dispatch(searchPokemon(name, pokemonList))
+        searchPokemon: (name, pokemonList)=>dispatch(searchPokemon(name, pokemonList)),
+        cleanSearch: ()=>dispatch(cleanState())
   }
 }
 const mapStateToProps = (state) =>{
+    console.log('state', state);
     return {
         ...state
     }

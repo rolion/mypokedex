@@ -6,7 +6,8 @@ import {
     ADD_AXIOS_STARTED,
     ADD_AXIOS_SUCCESS,
     ADD_AXIOS_FAILURE,
-    FILTER_POKEMON_LIST
+    FILTER_POKEMON_LIST,
+    CLEAN_STATE
 } from './types';
 export const addAxiosFailure = payload => ({
     type: ADD_AXIOS_FAILURE,
@@ -36,4 +37,9 @@ export const searchPokemonInfo = payload => ({
     type: SEARCH_POKEMON_INFO,
     payload
 });
+
+export const cleanState = payload => ({
+    type: CLEAN_STATE,
+    payload
+})
 

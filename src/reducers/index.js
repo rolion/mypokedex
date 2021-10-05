@@ -5,7 +5,10 @@ import {
     SEARCH_POKEMON_INFO,
     ADD_AXIOS_STARTED,
     ADD_AXIOS_SUCCESS,
-    ADD_AXIOS_FAILURE, FILTER_POKEMON_LIST, ADD_POKEMON_NAME_TO_SEARCH
+    ADD_AXIOS_FAILURE,
+    FILTER_POKEMON_LIST,
+    ADD_POKEMON_NAME_TO_SEARCH,
+    CLEAN_STATE
 } from '../actions/types';
 
 
@@ -37,6 +40,11 @@ const reducer = (state =initialState, action) => {
             return {
                 ...state,
                 pokemonList: [ ...action.payload ]
+            }
+        case CLEAN_STATE:
+            return {
+                ...state,
+                filterPokemonList: null
             }
 
     }

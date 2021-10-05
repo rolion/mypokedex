@@ -9,99 +9,65 @@ const fakePokemonList = [
         "url": "https://pokeapi.co/api/v2/pokemon/1/"
     },
     {
-        "name": "ivysaur",
-        "url": "https://pokeapi.co/api/v2/pokemon/2/"
-    },
-    {
-        "name": "venusaur",
-        "url": "https://pokeapi.co/api/v2/pokemon/3/"
-    },
-    {
         "name": "charmander",
         "url": "https://pokeapi.co/api/v2/pokemon/4/"
+    }
+];
+const pokemonInfo =[
+    {
+        species:{
+            name:'bulbasaur',
+            url:'https://pokeapi.co/api/v2/pokemon-species/1/',
+        },
+        id:1,
+        weight:69,
+        height:7,
+        name:"bulbasaur",
+        "is_default": true,
+        types:[
+            {
+                "slot": 1,
+                "type": {
+                    "name": "grass",
+                    "url": "https://pokeapi.co/api/v2/type/12/"
+                }
+            },
+            {
+                "slot": 2,
+                "type": {
+                    "name": "poison",
+                    "url": "https://pokeapi.co/api/v2/type/4/"
+                }
+            }
+        ],
+        sprites: {
+            "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+            "other": {
+                "official-artwork": {
+                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+                }
+            },
+        },
+        stats:[
+            {
+                "base_stat": 45,
+                "effort": 0,
+                "stat": {
+                    "name": "hp",
+                    "url": "https://pokeapi.co/api/v2/stat/1/"
+                }
+            },
+            {
+                "base_stat": 49,
+                "effort": 0,
+                "stat": {
+                    "name": "attack",
+                    "url": "https://pokeapi.co/api/v2/stat/2/"
+                }
+            },
+        ]
     },
     {
-        "name": "charmeleon",
-        "url": "https://pokeapi.co/api/v2/pokemon/5/"
-    },
-    {
-        "name": "charizard",
-        "url": "https://pokeapi.co/api/v2/pokemon/6/"
-    },
-]
-it('should return the pokemon list', async function () {
-    axios.get.mockResolvedValueOnce({data:
-            {
-                count: 60,
-                next:null,
-                previus:null,
-                results: [
-                    {
-                        name:'test-pokemon',
-                        url:'https://pokeapi.co/api/v2/pokemon/1/'
-                    }
-                ]
-            }
-    })
-    let result = await getPokemonList(10, 0).then(data => data.data.results);
-    expect(result.length).toEqual(1)
-});
-it('should get Pokemon list that have substring', async () =>{
-    axios.get.mockResolvedValueOnce({data:
-            {
-                count: 60,
-                next:null,
-                previus:null,
-                results: fakePokemonList
-            }
-    }).mockResolvedValue({
-        data:{
-            "sprites": {
-                "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-                "other": {
-                    "official-artwork": {
-                        "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-                    }
-                },
-            }
-        }
-    })
-    let result = await searchPokemonByName('saur');
-    expect(result).toStrictEqual([
-            { name: 'bulbasaur', id: '1', img:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'},
-            { name: 'ivysaur', id: '2', img:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'},
-            { name: 'venusaur', id: '3', img:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'}
-        ]
-    )
-})
-it('should get Pokemon that have exact match', async () =>{
-    axios.get.mockResolvedValueOnce({data:
-            {
-                count: 60,
-                next:null,
-                previus:null,
-                results: fakePokemonList
-            }
-    }).mockResolvedValue({
-        data:{
-            "sprites": {
-                "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
-                "other": {
-                    "official-artwork": {
-                        "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png"
-                    }
-                },
-            }
-        }
-    })
-    let result = await searchPokemonByName('charmander');
-    expect(result).toStrictEqual([
-            { name: 'charmander', id: '4', img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png" },
-        ]
-    )
-})
-it('should return pokemon info', async function () {
-    let axiosPokemoBaseInfo = {
         species:{
             name:'charmander',
             url:'https://pokeapi.co/api/v2/pokemon-species/4/',
@@ -109,6 +75,8 @@ it('should return pokemon info', async function () {
         id:4,
         weight:85,
         height:6,
+        name:'charmander',
+        "is_default": true,
         types:[
             {
                 "slot": 1,
@@ -144,8 +112,179 @@ it('should return pokemon info', async function () {
                 }
             },
         ]
-    };
-    axios.get.mockResolvedValueOnce({data:axiosPokemoBaseInfo
+    }
+];
+it('should return the pokemon list', async function () {
+    axios.get.mockResolvedValueOnce({data:
+            {
+                count: 60,
+                next:null,
+                previus:null,
+                results: [
+                    {
+                        name:'test-pokemon',
+                        url:'https://pokeapi.co/api/v2/pokemon/1/'
+                    }
+                ]
+            }
+    })
+    let result = await getPokemonList(10, 0).then(data => data.data.results);
+    expect(result.length).toEqual(1)
+});
+it('should get Pokemon list that have substring', async () =>{
+    axios.get.mockResolvedValueOnce({data: pokemonInfo[0]
+    });//.mockResolvedValueOnce({data: pokemonInfo[1]})
+    let result = await searchPokemonByName('saur', fakePokemonList);
+    expect(result).toStrictEqual([
+        {
+            "heigth": 0.7000000000000001,
+            "id": 1,
+            "images": {
+                "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+                "other": {
+                    "official-artwork": {
+                        "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+                    }
+                }
+            },
+            "is_default": true,
+            name:"bulbasaur",
+            "specieUrl": "https://pokeapi.co/api/v2/pokemon-species/1/",
+            "stats": [
+                {
+                    "base_stat": 45,
+                    "effort": 0,
+                    "stat": {
+                        "name": "hp",
+                        "url": "https://pokeapi.co/api/v2/stat/1/"
+                    }
+                },
+                {
+                    "base_stat": 49,
+                    "effort": 0,
+                    "stat": {
+                        "name": "attack",
+                        "url": "https://pokeapi.co/api/v2/stat/2/"
+                    }
+                }
+            ],
+            "types": [
+                {
+                    "slot": 1,
+                    "type": {
+                        "name": "grass",
+                        "url": "https://pokeapi.co/api/v2/type/12/"
+                    }
+                },
+                {
+                    "slot": 2,
+                    "type": {
+                        "name": "poison",
+                        "url": "https://pokeapi.co/api/v2/type/4/"
+                    }
+                }
+            ],
+            "weight": 6.9
+        },
+        ]
+    )
+})
+it('should get Pokemon that have exact match', async () =>{
+    axios.get.mockResolvedValue({data: pokemonInfo[1]});
+    let result = await searchPokemonByName('charmander', fakePokemonList);
+    expect(result).toStrictEqual([
+        {
+            "heigth": 0.6000000000000001,
+            "id": 4,
+            "images": {
+                "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
+                "other": {
+                    "official-artwork": {
+                        "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png"
+                    }
+                }
+            },
+            "is_default": true,
+            name:'charmander',
+            "specieUrl": "https://pokeapi.co/api/v2/pokemon-species/4/",
+            "stats": [
+                {
+                    "base_stat": 39,
+                    "effort": 0,
+                    "stat": {
+                        "name": "hp",
+                        "url": "https://pokeapi.co/api/v2/stat/1/"
+                    }
+                },
+                {
+                    "base_stat": 52,
+                    "effort": 0,
+                    "stat": {
+                        "name": "attack",
+                        "url": "https://pokeapi.co/api/v2/stat/2/"
+                    }
+                }
+            ],
+            "types": [
+                {
+                    "slot": 1,
+                    "type": {
+                        "name": "fire",
+                        "url": "https://pokeapi.co/api/v2/type/10/"
+                    }
+                }
+            ],
+            "weight": 8.5
+        }
+        ]
+    )
+})
+it('should return pokemon info', async function () {
+    // let axiosPokemoBaseInfo = {
+    //     species:{
+    //         name:'charmander',
+    //         url:'https://pokeapi.co/api/v2/pokemon-species/4/',
+    //     },
+    //     id:4,
+    //     weight:85,
+    //     height:6,
+    //     types:[
+    //         {
+    //             "slot": 1,
+    //             "type": {
+    //                 "name": "fire",
+    //                 "url": "https://pokeapi.co/api/v2/type/10/"
+    //             }
+    //         }
+    //     ],
+    //     sprites: {
+    //         "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
+    //         "other": {
+    //             "official-artwork": {
+    //                 "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png"
+    //             }
+    //         },
+    //     },
+    //     stats:[
+    //         {
+    //             "base_stat": 39,
+    //             "effort": 0,
+    //             "stat": {
+    //                 "name": "hp",
+    //                 "url": "https://pokeapi.co/api/v2/stat/1/"
+    //             }
+    //         },
+    //         {
+    //             "base_stat": 52,
+    //             "effort": 0,
+    //             "stat": {
+    //                 "name": "attack",
+    //                 "url": "https://pokeapi.co/api/v2/stat/2/"
+    //             }
+    //         },
+    //     ]
+    // };
+    axios.get.mockResolvedValueOnce({data:pokemonInfo[1]
 
             }
     ).mockResolvedValueOnce({
@@ -2513,11 +2652,11 @@ it('should return pokemon info', async function () {
             "id": 2
         }
     }).mockResolvedValueOnce({
-        data: axiosPokemoBaseInfo
+        data: pokemonInfo[1]
     }).mockResolvedValueOnce({
-        data: axiosPokemoBaseInfo
+        data: pokemonInfo[1]
     }).mockResolvedValueOnce({
-        data: axiosPokemoBaseInfo
+        data: pokemonInfo[1]
     })
     let result = await getPokemonInfo('charmander');
     let expectedResult =  {
@@ -2525,6 +2664,7 @@ it('should return pokemon info', async function () {
         id: 4,
         weight: 8.5,
         heigth: 0.6000000000000001,
+        "is_default": true,
         specieUrl: 'https://pokeapi.co/api/v2/pokemon-species/4/',
         types: [ { slot: 1, type: { name: 'fire', url: 'https://pokeapi.co/api/v2/type/10/' } } ],
         images: {

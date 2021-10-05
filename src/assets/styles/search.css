@@ -1,4 +1,6 @@
 .search{
     padding-top: 1em;
 }
-
+.empty-search{
+    background-color: white;
+}

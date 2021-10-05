@@ -6,6 +6,7 @@ import { useParams, useHistory} from "react-router-dom";
 import Pokemondata from "../components/Pokemondata";
 import PokemonEvolution from "../components/Pokemonevolution";
 import Spinner from "../components/Spinner";
+import Error404 from "../components/Error404";
 
 
 
@@ -19,6 +20,7 @@ const Pokemon = ( props ) => {
     });
     const [isLoading, setIsLoading] = useState(true);
     const [pokemonInfo, setPokemonInfo] = useState(null);
+    const [error, setError] = useState(null);
     useEffect(async ()=>{
         try{
             if(pokemonInfo == null || pokemonInfo.name !=urlName){
@@ -29,12 +31,21 @@ const Pokemon = ( props ) => {
             }
         }catch (e) {
             console.log(e);
+            setError(true);
         }
         setIsLoading(false);
     }, [urlName]);
 
     const handleClick = (e) => {
         history.push("/pokedex");
+    }
+
+    if(error){
+        return <>
+            <div className='container'>
+                <Error404></Error404>
+            </div>
+        </>
     }
 
     if (isLoading == true ){

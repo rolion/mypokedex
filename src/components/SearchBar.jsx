@@ -6,7 +6,7 @@ import {getPokemonList as axiosGetPokemonList, searchPokemonByName, getPokemonId
 import SearchResult from "./SearchResult";
 import Spinner from "./Spinner";
 import { connect } from 'react-redux';
-import {useHistory, useLocation} from "react-router-dom"
+import {useHistory, useLocation} from "react-router-dom";
 
 const SearchBar = (props) => {
     let {loading, pokemonList, filterPokemonList} = props ;
@@ -29,7 +29,6 @@ const SearchBar = (props) => {
             params.append("search", query);
             history.push({search: params.toString()});
         }
-
     }
     return <>
             <div className='row d-flex justify-content-center search '>
@@ -42,7 +41,7 @@ const SearchBar = (props) => {
                                onChange={event => setQuery(event.target.value)}
                                onKeyDown={e => e.key === 'Enter' && handleSearch()}/>
                         <div className="input-group-append">
-                            <button className="btn btn-primary" type="button"  onClick={e=>handleSearch()} >Search</button>
+                            <button className="btn btn-primary" type="button" disabled={loading}  onClick={e=>handleSearch()} >Search</button>
                         </div>
                     </div>
                 </div>

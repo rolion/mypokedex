@@ -9,32 +9,25 @@ import { connect } from 'react-redux';
 import {useHistory, useLocation} from "react-router-dom"
 
 const SearchBar = (props) => {
-
     let {loading, pokemonList, filterPokemonList} = props ;
-    console.log('props', props);
     const q = useQuery();
     const params = new URLSearchParams();
     const history = useHistory();
     const [query, setQuery] = useState("");
-    const [isReload, setReload] = useState(q.get('search')==null?true:false);
     useEffect(()=>{
         if(q.get('search')==null){
             props.cleanSearch();
             setQuery('');
-            console.log('search result cleaned')
         }
         if(pokemonList == undefined ){
             props.getList();
-            console.log('list loaded');
         }
     },[q.get('search')==null?true:false]);
-    console.log('search value',q.get('search'))
     const handleSearch = async () => {
         if(query){
             props.searchPokemon(query, pokemonList);
             params.append("search", query);
             history.push({search: params.toString()});
-            console.log('param added',params.get('search'));
         }
 
     }
@@ -79,7 +72,6 @@ const searchPokemon = (name, pokemonList) =>{
         dispatch(addAxiosStarted(true));
         return searchPokemonByName(name, pokemonList).then(
             (resp) => {
-                console.log('searchResult', resp);
                 dispatch(filterPokemonList(resp))
 
                 return dispatch(addAxiosSuccess(true));
@@ -97,7 +89,6 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 const mapStateToProps = (state) =>{
-    console.log('state', state);
     return {
         ...state
     }

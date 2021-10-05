@@ -117,7 +117,6 @@ const getEvolutionPic = async evolves_to =>{
     return evolves_to;
 }
 const getPokemonById = id => axios.get(`${basicUrl}pokemon/${id}`).then(resp => {
-    console.log('getPokemonById', id);
     return resp.data
 });
 const getPokemonByName = name => axios.get(`${basicUrl}pokemon/${name}`).then(resp => resp.data);

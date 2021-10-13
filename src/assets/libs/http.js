@@ -4,12 +4,12 @@ const  axios = require('axios');
 
 const basicUrl = 'https://pokeapi.co/api/v2/';
 
-const getPokemonList = (limit = 60, offset = 0 ) => axios.get(`${basicUrl}pokemon?limit=${limit}&offset=${offset}`);
+const getAllPokemon = (limit = 60, offset = 0 ) => axios.get(`${basicUrl}pokemon?limit=${limit}&offset=${offset}`);
 const getPokemonIdFromUrl = url => url.split('/')[6]
 
 const searchPokemonByName =  async (name, pokemonList) => {
-    //let pokemonList = await getPokemonList(1118, 0).then(resp => resp.data.results);
-    let filteredPokemonList = pokemonList.filter(pokemon => (pokemon.name.includes(name)) );
+
+    let filteredPokemonList = pokemonList.filter(pokemon => (pokemon.name.includes(name.toLowerCase())) );
     let pokemonListMapped = filteredPokemonList.map(pokemon =>( {name:pokemon.name, id : getPokemonIdFromUrl(pokemon.url)}));
     let searchResult = [];
     for(let position = 0; position < pokemonListMapped.length; position++){
@@ -134,7 +134,7 @@ const getPokemonInfo = async id =>{
     return {...basePokemonInfo, ...pokemonSpecie, ...pokemonStrengthWeakness, evolutionChain:{...pokemonEvolutionChain}}
 }
 export {
-    getPokemonList,
+    getAllPokemon,
     searchPokemonByName,
     getPokemonInfo,
     getPokemonIdFromUrl

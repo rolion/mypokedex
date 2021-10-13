@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { getPokemonList, searchPokemonByName, getPokemonInfo } from '../assets/libs/http'
+import { getAllPokemon, searchPokemonByName, getPokemonInfo } from '../assets/libs/http'
 jest.mock('axios');
 
 const fakePokemonList = [
@@ -128,7 +128,7 @@ it('should return the pokemon list', async function () {
                 ]
             }
     })
-    let result = await getPokemonList(10, 0).then(data => data.data.results);
+    let result = await getAllPokemon(10, 0).then(data => data.data.results);
     expect(result.length).toEqual(1)
 });
 it('should get Pokemon list that have substring', async () =>{

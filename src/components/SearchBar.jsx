@@ -2,7 +2,7 @@ import React,  { useState, useEffect } from 'react';
 
 import '../assets/styles/search.css';
 import {getPokemonList, filterPokemonList, addAxiosStarted, addAxiosSuccess, cleanState} from '../actions/index';
-import {getPokemonList as axiosGetPokemonList, searchPokemonByName, getPokemonIdFromUrl} from '../assets/libs/http';
+import {getAllPokemon, searchPokemonByName, getPokemonIdFromUrl} from '../assets/libs/http';
 import SearchResult from "./SearchResult";
 import Spinner from "./Spinner";
 import { connect } from 'react-redux';
@@ -59,25 +59,26 @@ function useQuery() {
     return new URLSearchParams(useLocation().search);
 }
 const getRawList = ()=>{
-    return function (dispatch){
-        return axiosGetPokemonList(1118, 0).then(
-            (resp)=> dispatch(getPokemonList(resp.data.results)),
-            (error)=>dispatch(console.log(error))
-        )
+    return async function (dispatch){
+        try {
+            let resp = await getAllPokemon(1118, 0);
+            let data = resp.data;
+            return dispatch(getPokemonList(data.results));
+        }catch (e) {
+            dispatch(console.log(e));
+        }
     }
 }
 const searchPokemon = (name, pokemonList) =>{
-    return function (dispatch){
+    return async function (dispatch){
         dispatch(addAxiosStarted(true));
-        return searchPokemonByName(name, pokemonList).then(
-            (resp) => {
-                dispatch(filterPokemonList(resp))
-
-                return dispatch(addAxiosSuccess(true));
-            },
-            (error) => dispatch(console.log(error))
-        )
-
+        try{
+            let resp = await searchPokemonByName(name, pokemonList);
+            dispatch(filterPokemonList(resp));
+            dispatch(addAxiosSuccess(true));
+        }catch (e) {
+            dispatch(console.log(e));
+        }
     }
 }
 const mapDispatchToProps = (dispatch) => {
